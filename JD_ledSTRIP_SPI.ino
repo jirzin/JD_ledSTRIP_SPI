@@ -39,7 +39,7 @@ int streakColors[len][3] = {
 const int switchPin = 8;
 
 typedef enum {LISTENING, STREAK} ProgState;
-ProgState ps = STREAK;
+ProgState ps = LISTENING;
 
 void setup() {
   pinMode(switchPin, INPUT_PULLUP);
@@ -56,20 +56,39 @@ void loop() {
       }
       break;
     case STREAK:
-      colorWipe(20);
+      colorWipeB(20);
       delay(1000);
       ps = LISTENING;
       break;
   }
 }
 
-void colorWipe(uint8_t wait) {
+void colorWipeA(uint8_t wait) {
   for (int i = 0; i < strip.numPixels(); i++) {
     for (int l = 0; l < len; l++) {
       strip.setPixelColor(i - l, Color(streakColors[l][0], streakColors[l][1], streakColors[l][2]));
     }
     strip.show();
     delay(wait);
+  }
+}
+
+void colorWipeB(uint8_t wait) {
+  for (int i = strip.numPixels(); i > 0; i--) {
+    for (int l = 0; l < len; l++) {
+      strip.setPixelColor(i + l, Color(streakColors[l][0], streakColors[l][1], streakColors[l][2]));
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+
+void stripBlack() {
+  for (int i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, Color(0, 0, 0));
+    strip.show();
+    delayMicroseconds(1);
   }
 }
 
